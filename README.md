@@ -12,3 +12,5 @@ run: `pip install -r requirements.txt` __
 run: `sudo apt-get install libpq-dev python3-dev` __
 ## Database
 Postgresql
+## Data
+Deutsche Bahn's Timetables-API, Interne Bahnhofsnummer(IBNR), 
