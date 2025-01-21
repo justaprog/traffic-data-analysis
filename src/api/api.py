@@ -10,7 +10,11 @@ load_dotenv()
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 
-url = "https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/fchg/8000105"
+evaNo = 8000105
+date = 250121
+hour = 10
+# url = "https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/fchg/8000105"
+url = "https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/plan/8000105/250121/10"
 
 headers = {
     "DB-Client-Id": client_id,
@@ -21,15 +25,17 @@ headers = {
 response = requests.get(url, headers=headers)
 # get data
 xml_data = response.text
+
+
 # Parse the XML
-root = ET.fromstring(xml_data)
-station = root.attrib.get("station")
-eva = root.attrib.get("eva")
-print(f"Stop ID: {station}, EVA: {eva}")
+#root = ET.fromstring(xml_data)
+#station = root.attrib.get("station")
+#eva = root.attrib.get("eva")
+#print(f"Stop ID: {station}, EVA: {eva}")
 
 
 
-#print(response.text)
+print(response.text)
 """
 with open("data/timetable.xml", "w") as file:
     file.write(xml_data)
