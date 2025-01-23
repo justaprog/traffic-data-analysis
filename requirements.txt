@@ -1,2 +1,4 @@
 # Database
 psycopg2
+requests
+python-dotenv
