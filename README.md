@@ -13,10 +13,10 @@ run: `pip install virtualenv` \
 run: `virtualenv venv`  # erstellt im aktuellen Ordner einen Ordner 'venv' mit der virtuellen Umgebung\
 run: `source venv/bin/activate`   # danach erscheint ein (venv) vor dem Command Prompt\
 run: `pip install -r requirements.txt` \
-run: `python src/webapplication/app.py` from root to start web application
+run: `python src/webapplication/app.py` from root to start web application.
 ## Tools
-Database: PostgreSQL 
-Frontend: Html/css, Javascript, Flask
-Backend: Python
+Database: PostgreSQL.
+Frontend: Html/css, Javascript, Flask.
+Backend: Python.
 ## Data
-Deutsche Bahn's Timetables-API, Interne Bahnhofsnummer(IBNR)
+Deutsche Bahn's Timetables-API, Interne Bahnhofsnummer(IBNR).
