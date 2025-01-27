@@ -4,7 +4,7 @@ This project uses Deutsche Bahn's Timetables-API (https://developers.deutschebah
 ## Demo
 Here’s what the traffic information page looks like:
 
-![Traffic Page Screenshot](images/demo.png)
+![Traffic Page Screenshot](data/images/demo.png)
 ## How to start
 Create virtual environment for Linux and WSL(pip & virtualenv): \
 run: `pip install -U pip` \
