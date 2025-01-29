@@ -2,3 +2,6 @@
 psycopg2
 requests
 python-dotenv
+
+#object detection
+ultralytics
