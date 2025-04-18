@@ -1,10 +1,8 @@
 import sys
 import os
-# Add the folder containing the Python file to sys.path
-sys.path.append(os.path.abspath("./src/database/config"))
 
 import psycopg2
-from config import load_config
+from config.config import load_config
 
 def create_tables():
     """ Create tables in the PostgreSQL database"""
