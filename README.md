@@ -26,7 +26,7 @@ run: `pip install virtualenv` \
 run: `virtualenv venv`  # erstellt im aktuellen Ordner einen Ordner 'venv' mit der virtuellen Umgebung\
 run: `source venv/bin/activate`   # danach erscheint ein (venv) vor dem Command Prompt\
 run: `pip install -r requirements.txt` \
-run: `python src/webapplication/app.py` from root to start web application.
+run: `python src/webapplication/run.py` from root to start web application.
 ## Tools
 Database: PostgreSQL.  
 Frontend: Html/css, Javascript, Flask.  
