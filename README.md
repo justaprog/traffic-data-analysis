@@ -8,17 +8,16 @@ Here’s what the traffic information page looks like:
 ## Setup 
 ### Database Connection
 To connect to the postgreSQL database, there need to be a file named database.ini in src/database/config containing \
-"[postgresql] \
+[postgresql] \
 host=localhost \
 database=suppliers \
 user=YourUsername \
-password=YourPassword"
+password=YourPassword
 ### Deutsche Bahn API
 To access the API, there need to be a file named .env in src/data_pipelines containing \
-"
+
 CLIENT_ID = "Your API ID"\
-CLIENT_SECRET = "Your API Secret" \
-"
+CLIENT_SECRET = "Your API Secret" 
 ## How to start
 Create virtual environment for Linux and WSL(pip & virtualenv): \
 run: `pip install -U pip` \
