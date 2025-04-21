@@ -18,7 +18,7 @@ DB_PASSWORD=YOURPASSWORD
 ### Deutsche Bahn API
 To access the API, .env need to contain
 "
-CLIENT_ID = "Your API ID" \ 
+CLIENT_ID = "Your API ID"  
 CLIENT_SECRET = "Your API Secret"
 "
 ### Install Docker Engine (Optional)
