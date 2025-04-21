@@ -35,7 +35,7 @@ run: `pip install -r requirements.txt` \
 run: `flask --app src/webapplication run --debug` from root to start web application.
 go to: `http://localhost:5000/`
 ### With Docker
-docker compose up -d --build
+run: `docker compose up -d --build` \
 go to: `http://localhost:5000/`
 ## Tools
 Database: PostgreSQL.  
