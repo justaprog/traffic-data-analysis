@@ -4,7 +4,7 @@ import os
 sys.path.append(os.path.abspath("./src/database/config"))
 
 import psycopg2
-from collect import collect_planned_data, collect_changes_data
+from .collect import collect_planned_data, collect_changes_data
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
@@ -31,33 +31,35 @@ def etl_planned_data(cursor,evaNo, date, hour):
         cursor.execute(f"INSERT INTO IBNR VALUES ({evaNo},'{station_name}')")
     except:
         print (f"EvaNo:{evaNo} is in the database")
-
+    # Find all Objects 
     for object in root.findall("s"):
+        #Find all arrival path
         ar_elements = object.findall("ar")
+
         for ar in ar_elements:
             # Access attributes of each <ar> element
+            id = ar.get("id",'NULL')
             pt = ar.attrib.get("pt", 'NULL')
             pp = ar.attrib.get("pp", 'NULL')
             ppth = ar.attrib.get("ppth", 'NULL')
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
             try:
-                cursor.execute(f"INSERT INTO Arrival VALUES (DEFAULT,'{timestamp}','{pp}','{ppth}',{evaNo})")
+                cursor.execute(f"INSERT INTO Arrival VALUES (DEFAULT,'{timestamp}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
-                conn.rollback()  # Roll back the transaction on error
-    for object in root.findall("s"):
-        ar_elements = object.findall("dp")
-        for ar in ar_elements:
-            # Access attributes of each <ar> element
-            pt = ar.attrib.get("pt", 'NULL')
-            pp = ar.attrib.get("pp", 'NULL')
-            ppth = ar.attrib.get("ppth", 'NULL')
+        # Find all Departure
+        dp_elements = object.findall("dp")
+        for dp in dp_elements:
+            # Access attributes of each <dp> element
+            id = dp.get("id",'NULL')
+            pt = dp.attrib.get("pt", 'NULL')
+            pp = dp.attrib.get("pp", 'NULL')
+            ppth = dp.attrib.get("ppth", 'NULL')
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
             try:
-                cursor.execute(f"INSERT INTO Departure VALUES (DEFAULT,'{timestamp}','{pp}','{ppth}',{evaNo})")
+                cursor.execute(f"INSERT INTO Departure VALUES (DEFAULT,'{timestamp}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
-                conn.rollback()  # Roll back the transaction on error
 
 def etl_changes_data(cursor, evaNo):
     """

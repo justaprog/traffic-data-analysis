@@ -7,6 +7,7 @@ from flask import Flask
 from webapplication.blueprints.home.routes import home_bp
 from webapplication.blueprints.auth.routes import auth_bp
 from database.config.config import load_config
+from database.create_table import create_tables
 
 # create and configure the app
 def create_app(test_config = None):
@@ -24,6 +25,8 @@ def create_app(test_config = None):
         print("Database connection established.")
     except Exception as e:
         print("Error connecting to the database:", e)
+    
+    create_tables()
     # register the blueprints 
     app.register_blueprint(home_bp)
     app.register_blueprint(auth_bp)
