@@ -10,15 +10,15 @@ There need to be a file named .env in rootfolder to set up enviroment variables.
 ### Database Connection
 To connect to the postgreSQL database, .env need to contain \
 "
-DB_HOST=YOURHOST
-DB_NAME=YOURNAME
-DB_USER=YOURUSER
+DB_HOST=YOURHOST \
+DB_NAME=YOURNAME \
+DB_USER=YOURUSER \
 DB_PASSWORD=YOURPASSWORD
 "
 ### Deutsche Bahn API
 To access the API, .env need to contain
 "
-CLIENT_ID = "Your API ID"
+CLIENT_ID = "Your API ID" \ 
 CLIENT_SECRET = "Your API Secret"
 "
 ### Install Docker Engine (Optional)
