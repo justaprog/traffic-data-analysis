@@ -39,7 +39,7 @@ run: `docker compose up -d --build` \
 go to: `http://localhost:5000/`
 ## Tools
 Database: PostgreSQL.  
-Frontend: Html/css, Javascript, Flask.  
-Backend: Python.  
+Frontend: HTML/CSS, Javascript.  
+Backend: Python, Flask
 ## Data
 Deutsche Bahn's Timetables-API, Interne Bahnhofsnummer(IBNR).
