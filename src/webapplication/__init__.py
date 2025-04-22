@@ -26,7 +26,8 @@ def create_app(test_config = None):
     except Exception as e:
         print("Error connecting to the database:", e)
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     create_tables()
     # register the blueprints 

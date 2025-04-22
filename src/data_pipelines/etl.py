@@ -8,7 +8,7 @@ from datetime import datetime
 
 from database.config import load_config
 
-def etl_planned_data(cursor,evaNo, date, hour):
+def etl_planned_data(conn,evaNo, date, hour):
     """
     Beschreibung
     Returns a Timetable object (see Timetable) that contains planned data for the specified station (evaNo) within the hourly time slice 
@@ -25,10 +25,16 @@ def etl_planned_data(cursor,evaNo, date, hour):
     #print(data)
     root = ET.fromstring(data)
     station_name = root.attrib["station"]
+    # If IBNR not in database, insert
     try:
-        cursor.execute(f"INSERT INTO IBNR VALUES ({evaNo},'{station_name}')")
+        with conn.cursor() as cursor:
+            cursor.execute(f"INSERT INTO IBNR VALUES ({evaNo},'{station_name}')")
+        conn.commit()
     except:
         print (f"EvaNo:{evaNo} is in the database")
+        conn.rollback() # rollback the failed insertion
+    finally:
+        cursor.close()
     # Find all Objects 
     for object in root.findall("s"):
         #Find all arrival path
@@ -40,11 +46,23 @@ def etl_planned_data(cursor,evaNo, date, hour):
             pt = ar.attrib.get("pt", 'NULL')
             pp = ar.attrib.get("pp", 'NULL')
             ppth = ar.attrib.get("ppth", 'NULL')
+            if pt is None:
+                print("Skipping element with missing 'pt'")
+                continue
+
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
+            query = """
+                    INSERT INTO Arrival (arrival_time, line, planned_platform, path, evaNo)
+                    VALUES (%s, %s, %s, %s, %s);
+                    """
             try:
-                cursor.execute(f"INSERT INTO Arrival VALUES (DEFAULT,'{timestamp}','{line}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
+                with conn.cursor() as cursor:
+                    cursor.execute(query, (timestamp, line, pp, ppth, evaNo))
+                conn.commit()
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
+                conn.rollback()
+
         # Find all Departure
         dp_elements = object.findall("dp")
         for dp in dp_elements:
@@ -53,11 +71,24 @@ def etl_planned_data(cursor,evaNo, date, hour):
             pt = dp.attrib.get("pt", 'NULL')
             pp = dp.attrib.get("pp", 'NULL')
             ppth = dp.attrib.get("ppth", 'NULL')
+            # Skip invalid entries
+            if pt is None:
+                print("Skipping element with missing 'pt'")
+                continue
+            
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
+            query = """
+                    INSERT INTO Departure (departure_time, line, planned_platform, path, evaNo)
+                    VALUES (%s, %s, %s, %s, %s);
+                    """
             try:
-                cursor.execute(f"INSERT INTO Departure VALUES (DEFAULT,'{timestamp}','{line}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
+                with conn.cursor() as cursor:
+                    cursor.execute(query, (timestamp, line, pp, ppth, evaNo))
+                conn.commit()
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
+                conn.rollback()
+                
 
 def etl_changes_data(cursor, evaNo):
     """

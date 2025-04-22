@@ -13,16 +13,16 @@ def arrival():
     #    Run etl process
     try:
         with psycopg2.connect(**config) as conn:
-            with conn.cursor() as cursor:
-                try:
-                    etl_planned_data(cursor,8004145, 250421, 21)
-                except Exception as e:
-                    print("Error during etl process",e)
-                # rows will be a list of tuples
+            try:
+                etl_planned_data(conn,8004145, 250421, 21)
+            except Exception as e:
+                print("Error during etl process:",e)
+            # rows will be a list of tuples
     except Exception as e:
         print("Error connecting the database:", e)
     finally:
-        conn.close()
+        if conn:
+            conn.close()
     #   Run a query, for example:
     #   SELECT arrival_time, evaNo, path FROM Arrival
     try:
@@ -37,7 +37,8 @@ def arrival():
         print("Error querying the database:", e)
         rows = []
     finally:
-        conn.close()
+        if conn:
+            conn.close()
     # Render a template (for example, 'home_index.html') with the results
     return render_template("api/arrival.html", arrivals=rows)
 
@@ -49,16 +50,16 @@ def departure():
     #    Run etl process
     try:
         with psycopg2.connect(**config) as conn:
-            with conn.cursor() as cursor:
-                try:
-                    etl_planned_data(cursor,8000261, 250422, 21)
-                except Exception as e:
-                    print("Error during etl process",e)
-                # rows will be a list of tuples
+            try:
+                etl_planned_data(conn,8000261, 250422, 22)
+            except Exception as e:
+                print("Error during etl process:",e)
+            # rows will be a list of tuples
     except Exception as e:
         print("Error connecting the database:", e)
     finally:
-        conn.close()
+        if conn:
+            conn.close()
     #   Run a query, for example:
     #   SELECT arrival_time, evaNo, path FROM Arrival
     try:
@@ -73,7 +74,8 @@ def departure():
         print("Error querying the database:", e)
         rows = []
     finally:
-        conn.close()
+        if conn:
+            conn.close()
 
     # Render a template (for example, 'home_index.html') with the results
     return render_template("api/departure.html", departure=rows)
