@@ -14,7 +14,7 @@ def arrival():
     try:
         with psycopg2.connect(**config) as conn:
             try:
-                etl_planned_data(conn,8004145, 250421, 21)
+                etl_planned_data(conn,8004145, 250422, 22)
             except Exception as e:
                 print("Error during etl process:",e)
             # rows will be a list of tuples

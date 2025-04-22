@@ -6,7 +6,7 @@ from .config import load_config
 
 def create_tables():
     """ Create tables in the PostgreSQL database"""
-    commands = """      
+    commands = """
 CREATE TABLE IF NOT EXISTS IBNR(
     evaNo INT PRIMARY KEY,
     station VARCHAR(255)
@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS Arrival (
     planned_platform VARCHAR(50),
     path TEXT,
     evaNo INT,
-    FOREIGN KEY (evaNo) REFERENCES IBNR(evaNo)
+    FOREIGN KEY (evaNo) REFERENCES IBNR(evaNo),
+    UNIQUE(arrival_time,path)
 );
 CREATE TABLE IF NOT EXISTS Departure (
     departure_id SERIAL PRIMARY KEY,
@@ -27,7 +28,8 @@ CREATE TABLE IF NOT EXISTS Departure (
     planned_platform VARCHAR(50),
     path TEXT,
     evaNo INT,
-    FOREIGN KEY (evaNo) REFERENCES IBNR(evaNo)
+    FOREIGN KEY (evaNo) REFERENCES IBNR(evaNo),
+    UNIQUE(departure_time,path)
 )
 
 
