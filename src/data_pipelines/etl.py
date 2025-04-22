@@ -1,14 +1,12 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath("./src/database/config"))
-
 import psycopg2
 from .collect import collect_planned_data, collect_changes_data
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-from config import load_config
+from database.config import load_config
 
 def etl_planned_data(cursor,evaNo, date, hour):
     """
@@ -38,26 +36,26 @@ def etl_planned_data(cursor,evaNo, date, hour):
 
         for ar in ar_elements:
             # Access attributes of each <ar> element
-            id = ar.get("id",'NULL')
+            line = ar.attrib.get("l",'NULL')
             pt = ar.attrib.get("pt", 'NULL')
             pp = ar.attrib.get("pp", 'NULL')
             ppth = ar.attrib.get("ppth", 'NULL')
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
             try:
-                cursor.execute(f"INSERT INTO Arrival VALUES (DEFAULT,'{timestamp}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
+                cursor.execute(f"INSERT INTO Arrival VALUES (DEFAULT,'{timestamp}','{line}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
         # Find all Departure
         dp_elements = object.findall("dp")
         for dp in dp_elements:
             # Access attributes of each <dp> element
-            id = dp.get("id",'NULL')
+            line = dp.attrib.get("l",'NULL')
             pt = dp.attrib.get("pt", 'NULL')
             pp = dp.attrib.get("pp", 'NULL')
             ppth = dp.attrib.get("ppth", 'NULL')
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
             try:
-                cursor.execute(f"INSERT INTO Departure VALUES (DEFAULT,'{timestamp}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
+                cursor.execute(f"INSERT INTO Departure VALUES (DEFAULT,'{timestamp}','{line}','{pp}','{ppth}',{evaNo}) ON CONFLICT DO NOTHING;")
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
 

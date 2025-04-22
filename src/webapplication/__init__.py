@@ -4,9 +4,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 import psycopg2
 from flask import Flask
-from webapplication.blueprints.home.routes import home_bp
-from webapplication.blueprints.auth.routes import auth_bp
-from database.config.config import load_config
+from webapplication.blueprints.home import home_bp
+from webapplication.blueprints.auth import auth_bp
+from webapplication.blueprints.api import api_bp
+from database.config import load_config
 from database.create_table import create_tables
 
 # create and configure the app
@@ -21,14 +22,16 @@ def create_app(test_config = None):
         conn = psycopg2.connect(**config)
         # Stores the connection in your Flask app.config dictionary. 
         # This makes it easy to retrieve inside any blueprint or route by referencing current_app.config["DB_CONN"].
-        app.config["DB_CONN"] = conn
         print("Database connection established.")
     except Exception as e:
         print("Error connecting to the database:", e)
-    
+    finally:
+        conn.close()
+
     create_tables()
     # register the blueprints 
     app.register_blueprint(home_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(api_bp)
     return app 
 

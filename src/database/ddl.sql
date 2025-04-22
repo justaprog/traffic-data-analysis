@@ -7,6 +7,7 @@ CREATE TABLE IBNR(
 CREATE TABLE Arrival (
     arrival_id SERIAL PRIMARY KEY,
     arrival_time TIMESTAMP,
+    line VARCHAR(50),
     planned_platform VARCHAR(50),
     path TEXT,
     evaNo INT,
@@ -15,6 +16,7 @@ CREATE TABLE Arrival (
 CREATE TABLE Departure (
     departure_id SERIAL PRIMARY KEY,
     departure_time TIMESTAMP,
+    line VARCHAR(50),
     planned_platform VARCHAR(50),
     path TEXT,
     evaNo INT,

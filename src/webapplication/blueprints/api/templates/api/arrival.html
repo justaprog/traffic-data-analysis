@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrival Data</title>
+</head>
+<body>
+  <h1>Arrival Information</h1>
+  <table border="1">
+    <tr>
+      <th>Arrival Time</th>
+      <th>Line</th>
+      <th>Station</th>
+      <th>Path (For arrival, the path indicates the stations that come before the current station. The first element then is the trip's start station.)</th>
+    </tr>
+    {% for row in arrivals %}
+      <tr>
+        <!-- row[0] is arrival_time, row[1] is evaNo, row[2] is path -->
+        <td>{{ row[0] }}</td>
+        <td>{{ row[1] }}</td>
+        <td>{{ row[2] }}</td>
+        <td>{{ row[3] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+</body>
+</html>
