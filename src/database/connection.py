@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+import psycopg2
 
 
 # Connect to database
@@ -16,6 +17,18 @@ def load_config():
     config["password"] = DB_PASSWORD
     return config
 
+def get_conn():
+    config = load_config()
+    try:
+        conn = psycopg2.connect(**config)
+        return conn
+    except Exception as e:
+        print("Error connecting the database:", e)
+        return None
+
+def close_conn(conn):
+    if conn:
+        conn.close()
 
 if __name__ == '__main__':
-    load_config()
+    conn = get_conn()

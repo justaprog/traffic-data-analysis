@@ -2,11 +2,32 @@ import sys
 import os
 
 import psycopg2
-from .collect import collect_planned_data, collect_changes_data
+from .collect import collect_planned_data, collect_changes_data, collect_eva_from_bhf
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-from database.config import load_config
+from database.connection import load_config,get_conn
+
+def etl_bhf_to_eva(db_conn, bhf):
+    data = collect_eva_from_bhf(bhf)
+    root = ET.fromstring(data)
+    try:
+        evaNo = root.find('station').get('eva')
+    except Exception as e:
+        print("Failed request, Please try different bahnhof name")
+    else:
+        try:
+            with db_conn.cursor() as cursor:
+                cursor.execute(f"INSERT INTO IBNR VALUES ({evaNo},'{bhf}')")
+            print(f"Insert ({evaNo},{bhf}) successful")
+            db_conn.commit()
+        except Exception as e:
+            print(f"Etl_bhf_to_eva:({evaNo},{bhf}) is in the database")
+            db_conn.rollback()
+        finally:
+            if db_conn:
+                db_conn.close()
+    
 
 def etl_planned_data(conn,evaNo, date, hour):
     """
@@ -37,19 +58,23 @@ def etl_planned_data(conn,evaNo, date, hour):
         cursor.close()
     # Find all Objects 
     for object in root.findall("s"):
-        #Find all arrival path
+        #Find all arrivals and process arrivals
         ar_elements = object.findall("ar")
-
         for ar in ar_elements:
             # Access attributes of each <ar> element
-            line = ar.attrib.get("l",'NULL')
-            pt = ar.attrib.get("pt", 'NULL')
-            pp = ar.attrib.get("pp", 'NULL')
-            ppth = ar.attrib.get("ppth", 'NULL')
+            line = ar.attrib.get("l",'NULL') # Line
+            pt = ar.attrib.get("pt", 'NULL') # planned time
+            pp = ar.attrib.get("pp", 'NULL') #  planned planned_platform
+            ppth = ar.attrib.get("ppth", 'NULL') # planned path
             if pt is None:
                 print("Skipping element with missing 'pt'")
                 continue
-
+            if pp is None:
+                print("Skipping element with missing 'pp")
+                continue
+            if ppth is None:
+                print("Skipping element with missing 'ppth'")
+                continue    
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
             query = """
                     INSERT INTO Arrival (arrival_time, line, planned_platform, path, evaNo)
@@ -63,7 +88,7 @@ def etl_planned_data(conn,evaNo, date, hour):
                 print(f"Database error during insert: {e}")
                 conn.rollback()
 
-        # Find all Departure
+        # Find all Departures and process departures
         dp_elements = object.findall("dp")
         for dp in dp_elements:
             # Access attributes of each <dp> element
@@ -144,12 +169,7 @@ if __name__ == "__main__":
     try:
         config = load_config()
         with psycopg2.connect(**config) as conn:
-            with conn.cursor() as cur:
-                #etl_planned_data(cur,8000105, 250122, 21)
-                cur.execute("SELECT * FROM Departure")
-                rows = cur.fetchall()
-                for row in rows:
-                    print(row)
+            print(etl_bhf_to_eva(conn,'München Hbf'))
     except (psycopg2.DatabaseError, Exception) as error:
         print(f"Database error: {error}")
     finally:

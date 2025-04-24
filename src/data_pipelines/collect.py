@@ -10,6 +10,28 @@ load_dotenv()
 client_id = os.getenv("CLIENT_ID")
 client_secret = os.getenv("CLIENT_SECRET")
 
+def collect_eva_from_bhf(bhf):
+    """Request a api call to get evaNummer from Bahnhof"""
+    url = f"https://apis.deutschebahn.com/db-api-marketplace/apis/timetables/v1/station/{bhf}"
+    headers = {
+        "DB-Client-Id": client_id,
+        "DB-Api-Key": client_secret,
+        "accept": "application/xml"
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        print("Success, here are API's Headers:", response.headers)
+    else:
+        print("Error:", response.status_code, response.text)
+        if response.status_code == 404:
+            print("Please try another name")
+
+    # get data
+    xml_data = response.text
+
+    return xml_data
+
 def collect_planned_data(evaNo, date, hour):
     """
     Beschreibung

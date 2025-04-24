@@ -7,7 +7,7 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from database.config import load_config
+from database.connection import load_config
 from webapplication.blueprints.auth import auth_bp
 
 @auth_bp.route('/register', methods=('GET', 'POST'))
