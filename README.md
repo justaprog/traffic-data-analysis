@@ -38,7 +38,7 @@ go to: `http://localhost:5000/`
 run: `docker compose up -d --build` \
 go to: `http://localhost:5000/`
 ## Tools
-Database: PostgreSQL, SQLAlchemy.
+Database: PostgreSQL, SQLAlchemy.  
 Frontend: HTML/CSS, Javascript.  
 Backend: Python, Flask.
 ## Data
