@@ -2,6 +2,7 @@
 psycopg2-binary
 requests
 python-dotenv
+SQLAlchemy
 
 #object detection
 #ultralytics

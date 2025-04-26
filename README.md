@@ -32,14 +32,14 @@ run: `pip install virtualenv` \
 run: `virtualenv venv`  # erstellt im aktuellen Ordner einen Ordner 'venv' mit der virtuellen Umgebung\
 run: `source venv/bin/activate`   # danach erscheint ein (venv) vor dem Command Prompt\
 run: `pip install -r requirements.txt` \
-run: `flask --app src/webapplication run --debug` from root to start web application.
+run: `flask --app src/app run --debug` from root to start web application.
 go to: `http://localhost:5000/`
 ### With Docker
 run: `docker compose up -d --build` \
 go to: `http://localhost:5000/`
 ## Tools
-Database: PostgreSQL.  
+Database: PostgreSQL, SQLAlchemy.
 Frontend: HTML/CSS, Javascript.  
-Backend: Python, Flask
+Backend: Python, Flask.
 ## Data
 Deutsche Bahn's Timetables-API, Interne Bahnhofsnummer(IBNR).
