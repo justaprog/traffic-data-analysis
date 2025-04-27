@@ -1,6 +1,6 @@
 # traffic-data-analysis
 ## Introduction
-This project uses Deutsche Bahn's Timetables-API (https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) to retrieve all planned trips that arrive or depart from a station using DB timetable API. 
+This project uses Deutsche Bahn's Timetables-API (https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) to retrieve all planned trips that arrive or depart from a station.
 ## Demo
 Here’s what the traffic information page looks like:
 
