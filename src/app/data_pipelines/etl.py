@@ -62,7 +62,7 @@ def etl_planned_data(conn,evaNo, date, hour):
         ar_elements = object.findall("ar")
         for ar in ar_elements:
             # Access attributes of each <ar> element
-            line = ar.attrib.get("l",'thisapisucks') # Line
+            line = ar.attrib.get("l",'Not Available') # Line
             pt = ar.attrib.get("pt", 'NULL') # planned time
             pp = ar.attrib.get("pp", 'NULL') #  planned planned_platform
             ppth = ar.attrib.get("ppth", 'NULL') # planned path
