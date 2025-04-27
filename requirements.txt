@@ -7,3 +7,6 @@ SQLAlchemy
 #object detection
 #ultralytics
 Flask
+
+# deployment
+gunicorn
