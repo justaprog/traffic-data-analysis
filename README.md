@@ -2,7 +2,7 @@
 ## Introduction
 This project uses Deutsche Bahn's Timetables-API (https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) to retrieve all planned trips that arrive or depart from a station.
 ## Demo
-Check it out on: http://youroctopus.com/
+Check it out on: http://youroctopus.com/  
 Here’s what the traffic information page looks like:
 
 ![Traffic Page Screenshot](data/images/demo.png)
