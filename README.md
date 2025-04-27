@@ -8,8 +8,9 @@ Here’s what the traffic information page looks like:
 ## Setup 
 There need to be a file named .env in rootfolder to set up enviroment variables. 
 ### Database Connection
-To connect to the postgreSQL database, .env need to contain \
-"
+To connect to the postgreSQL database, .env need to contain: \
+"  
+DATABASE_URL  \
 DB_HOST=YOURHOST \
 DB_NAME=YOURNAME \
 DB_USER=YOURUSER \
