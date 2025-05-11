@@ -29,6 +29,7 @@ CLIENT_SECRET = "Your API Secret"
 https://docs.docker.com/engine/install/ubuntu/
 ## How to start
 ### With python
+#### Flask App
 Create virtual environment for Linux and WSL(pip & virtualenv): \
 run: `pip install -U pip` \
 run: `sudo apt install python3 python3-pip` \
@@ -38,6 +39,8 @@ run: `source venv/bin/activate`   # danach erscheint ein (venv) vor dem Command 
 run: `pip install -r requirements.txt` \
 run: `flask --app src/app run --debug` from root to start web application.
 go to: `http://localhost:5000/`
+#### Data Analysis
+run: `python -m src.app.data_analysis.punctuality` from root.  
 ### With Docker
 run: `docker compose up -d --build` \
 go to: `http://localhost:5000/`
