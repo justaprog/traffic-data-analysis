@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS ibnrs(
     station VARCHAR(255) UNIQUE
 );
 CREATE TABLE IF NOT EXISTS arrivals (
-    arrival_id SERIAL PRIMARY KEY,
-    arrival_time TIMESTAMP,
+    arrival_id VARCHAR(128) PRIMARY KEY,
+    arrival_planned_time TIMESTAMP,
+    arrival_changed_time TIMESTAMP,
     line VARCHAR(50),
     planned_platform VARCHAR(50),
     path TEXT,
@@ -14,7 +15,8 @@ CREATE TABLE IF NOT EXISTS arrivals (
 );
 CREATE TABLE IF NOT EXISTS departures (
     departure_id SERIAL PRIMARY KEY,
-    departure_time TIMESTAMP,
+    departure_planned_time TIMESTAMP,
+    departure_changed_time TIMESTAMP,
     line VARCHAR(50),
     planned_platform VARCHAR(50),
     path TEXT,

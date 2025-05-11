@@ -51,6 +51,7 @@ def arrival_v2(evano,date,hour):
     if db_conn:
         try: 
             etl_planned_data(db_conn, evano,f_date,hour)
+            etl_changes_data(db_conn, evano)
         except Exception as e:
             print("Error during etl process:",e)
             db_conn.rollback()

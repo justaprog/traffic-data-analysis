@@ -7,8 +7,9 @@ from .db import engine
 class Arrival(Base):
     __tablename__ = "arrivals"
 
-    arrival_id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    arrival_time: Mapped[datetime.datetime] = mapped_column(DateTime)
+    arrival_id: Mapped[str] = mapped_column(primary_key=True)
+    arrival_planned_time: Mapped[datetime.datetime] = mapped_column(DateTime)
+    arrival_changed_time: Mapped[datetime.datetime] = mapped_column(DateTime,nullable=True)
     line: Mapped[str] = mapped_column(String(50))
     planned_platform: Mapped[str] = mapped_column(String(50))
     path: Mapped[str] = mapped_column(Text)
@@ -19,10 +20,10 @@ class Arrival(Base):
         with engine.connect() as conn:
             stmt = text("""
 
-        SELECT DISTINCT arrival_time, line, i.station as Station, path FROM arrivals ar
+        SELECT DISTINCT arrival_planned_time, arrival_changed_time, line, i.station as Station, path FROM arrivals ar
         JOIN IBNRs i ON i.evano = ar.evano
         WHERE i.evano = :evano 
-        ORDER BY arrival_time;
+        ORDER BY arrival_planned_time;
                         """)
             try:
                 result = conn.execute(stmt,{"evano": evano}).fetchall()

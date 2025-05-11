@@ -54,12 +54,12 @@ def etl_planned_data(conn,evaNo, date, hour):
     except:
         print (f"EvaNo:{evaNo} is in the database")
         conn.rollback() # rollback the failed insertion
-    finally:
-        cursor.close()
+
     # Find all Objects 
     for object in root.findall("s"):
         #Find all arrivals and process arrivals
         ar_elements = object.findall("ar")
+        id = object.attrib.get("id")
         for ar in ar_elements:
             # Access attributes of each <ar> element
             line = ar.attrib.get("l",'Not Available') # Line
@@ -75,14 +75,19 @@ def etl_planned_data(conn,evaNo, date, hour):
             if ppth is None:
                 print("Skipping element with missing 'ppth'")
                 continue    
-            timestamp = datetime.strptime(pt, "%y%m%d%H%M")
+            pt_timestamp = datetime.strptime(pt, "%y%m%d%H%M")
+                        # Truncate Microseconds
+            pt_timestamp = pt_timestamp.replace(microsecond=0)
+            # Truncate seconds
+            pt_timestamp = pt_timestamp.replace(second=0)
+
             query = """
-                    INSERT INTO arrivals (arrival_time, line, planned_platform, path, evaNo)
-                    VALUES (%s, %s, %s, %s, %s);
+                    INSERT INTO arrivals (arrival_id, arrival_planned_time, line, planned_platform, path, evaNo)
+                    VALUES (%s,%s,%s, %s, %s, %s);
                     """
             try:
                 with conn.cursor() as cursor:
-                    cursor.execute(query, (timestamp, line, pp, ppth, evaNo))
+                    cursor.execute(query, (id,pt_timestamp, line, pp, ppth, evaNo))
                 conn.commit()
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
@@ -92,7 +97,7 @@ def etl_planned_data(conn,evaNo, date, hour):
         dp_elements = object.findall("dp")
         for dp in dp_elements:
             # Access attributes of each <dp> element
-            line = dp.attrib.get("l",'thisapisuck')
+            line = dp.attrib.get("l",'Not Available')
             pt = dp.attrib.get("pt", 'NULL')
             pp = dp.attrib.get("pp", 'NULL')
             ppth = dp.attrib.get("ppth", 'NULL')
@@ -103,19 +108,19 @@ def etl_planned_data(conn,evaNo, date, hour):
             
             timestamp = datetime.strptime(pt, "%y%m%d%H%M")
             query = """
-                    INSERT INTO departures (departure_time, line, planned_platform, path, evaNo)
-                    VALUES (%s, %s, %s, %s, %s);
+                    INSERT INTO departures (departure_id,departure_planned_time, line, planned_platform, path, evaNo)
+                    VALUES (%s,%s, %s, %s, %s, %s);
                     """
             try:
                 with conn.cursor() as cursor:
-                    cursor.execute(query, (timestamp, line, pp, ppth, evaNo))
+                    cursor.execute(query, (id,timestamp, line, pp, ppth, evaNo))
                 conn.commit()
             except psycopg2.DatabaseError as e:
                 print(f"Database error during insert: {e}")
                 conn.rollback()
                 
 
-def etl_changes_data(cursor, evaNo):
+def etl_changes_data(conn, evaNo):
     """
     Beschreibung
     Returns a Timetable object (see Timetable) that contains all known changes for the station given by evaNo.
@@ -140,30 +145,49 @@ def etl_changes_data(cursor, evaNo):
 
     """
     data = collect_changes_data(evaNo)
+    #print(data)
     root = ET.fromstring(data)
     station_name = root.attrib["station"]
+    # If IBNR not in database, insert
     try:
-        cursor.execute(f"INSERT INTO IBNR VALUES ({evaNo},'{station_name}')")
+        with conn.cursor() as cursor:
+            cursor.execute(f"INSERT INTO ibnrs VALUES ({evaNo},'{station_name}')")
+        conn.commit()
     except:
         print (f"EvaNo:{evaNo} is in the database")
+        conn.rollback() # rollback the failed insertion
 
+    # Find all Objects 
     for object in root.findall("s"):
+        #Find all arrivals and process arrivals
         ar_elements = object.findall("ar")
+        id = object.attrib.get("id")
         for ar in ar_elements:
-            # Access attributes of each <ar> element
-            ct = ar.attrib.get("ct", 'NULL')
-            cp = ar.attrib.get("cp", 'NULL')
-            cs = ar.attrib.get("cs", 'NULL')
-            cpth = ar.attrib.get("cpth", 'NULL')
-            print(ct,cp,cs,cpth)
+            ct = ar.attrib.get("ct", "NULL") # planned time  
+            if ct == "NULL":
+                print("Skipping element with missing 'ct'")
+                continue
+            # parse in datetime
+            ct_timestamp = datetime.strptime(ct, "%y%m%d%H%M")
+            # Truncate Microseconds
+            ct_timestamp = ct_timestamp.replace(microsecond=0)
+            # Truncate seconds
+            ct_timestamp = ct_timestamp.replace(second=0)
 
-        #print(object.findall("ar").attrib.get("ct",None))
-    """
-    cursor.execute("SELECT * FROM IBNR;")
-    rows = cursor.fetchall()
-    for row in rows:
-        print(row)
-    """
+            query = """
+                UPDATE arrivals 
+                SET arrival_changed_time = %s 
+                WHERE arrival_id = %s 
+                AND arrival_planned_time IS DISTINCT FROM %s;
+            """
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(query, (ct_timestamp, id,ct_timestamp))
+                conn.commit()
+            except psycopg2.DatabaseError as e:
+                print(f"Database error during insert: {e}")
+                conn.rollback()
+
 
 if __name__ == "__main__":
     try:

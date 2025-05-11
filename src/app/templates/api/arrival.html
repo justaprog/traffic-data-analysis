@@ -16,7 +16,8 @@
 
   <table border="1">
     <tr>
-      <th>Arrival Time</th>
+      <th>Planned arrival time</th>
+      <th>Changed arrvial time</th>
       <th>Line</th>
       <th>Station</th>
       <th>Path (For arrival, the path indicates the stations that come before the current station. The first element then is the trip's start station.)</th>
@@ -28,6 +29,7 @@
         <td>{{ row[1] }}</td>
         <td>{{ row[2] }}</td>
         <td>{{ row[3] }}</td>
+        <td>{{ row[4] }}</td>
       </tr>
     {% endfor %}
   </table>
