@@ -31,3 +31,25 @@ class Arrival(Base):
                 print("Error querying the database:", e)
                 conn.rollback()
         return result
+    @classmethod
+    def get_data_by_evano_hour(cls, evano: int, date: str, hour: str):
+        hour = hour.zfill(2)
+        timestamp = datetime.datetime.strptime(date + hour + "00", "%y%m%d%H%M")
+        
+        stmt = text("""
+            SELECT DISTINCT arrival_planned_time, arrival_changed_time, line, i.station as Station, path
+            FROM arrivals ar
+            JOIN ibnrs i ON i.evano = ar.evano
+            WHERE i.evano = :evano AND arrival_planned_time > :timestamp
+            ORDER BY arrival_planned_time;
+        """)
+
+        try:
+            with engine.connect() as conn:
+                result = conn.execute(stmt, {"evano": evano, "timestamp": timestamp}).fetchall()
+        except Exception as e:
+            print("Error querying the database:", e)
+            result = []
+
+        return result
+

@@ -56,7 +56,7 @@ def arrival_v2(evano,date,hour):
             print("Error during etl process:",e)
             db_conn.rollback()
     try:
-        rows = Arrival.get_data_by_evano(evano)
+        rows = Arrival.get_data_by_evano_hour(evano,f_date,hour)
         if not rows:
             rows = [("","","","Please try another time/date")] 
     except Exception as e:

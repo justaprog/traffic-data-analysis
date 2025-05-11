@@ -10,3 +10,6 @@ Flask
 
 # deployment
 gunicorn
+
+#data analysis
+pandas

@@ -17,7 +17,7 @@ def create_app():
     app = Flask(__name__, instance_relative_config = True)
     # Initialize Database
     with app.app_context():
-        init_db(drop_tables=True)
+        init_db(drop_tables=False)
         print("Database connection succeeded")
 
     # register the blueprints 

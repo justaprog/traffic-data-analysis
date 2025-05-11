@@ -10,3 +10,4 @@ instance/
 .coverage
 htmlcov/
 build/
+*.log

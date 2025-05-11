@@ -90,12 +90,12 @@ def collect_changes_data(evaNo):
         "accept": "application/xml"
     }
     response = requests.get(url, headers=headers)
-    """
     if response.status_code == 200:
         print("Success, here are API's Headers:", response.headers)
     else:
         print("Error:", response.status_code, response.text)
-    """
+        if response.status_code == 404:
+            print("Please try another date")
     # get data
     xml_data = response.text
 

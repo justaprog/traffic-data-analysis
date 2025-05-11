@@ -1,11 +1,13 @@
 # traffic-data-analysis
 ## Introduction
-This project uses Deutsche Bahn's Timetables-API (https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables) to retrieve all planned trips that arrive or depart from a station.
+This project analyzes live train traffic using Deutsche Bahn's [Timetables API](https://developers.deutschebahn.com/db-api-marketplace/apis/product/timetables). It retrieves all planned and real-time trips that **arrive or depart** from selected stations and visualizes delays and patterns.
 ## Demo
 Check it out on: http://youroctopus.com/  
 Here’s what the traffic information page looks like:
 
 ![Traffic Page Screenshot](data/images/demo.png)
+
+![Delayed Traffic Visualisation](data/images/demo_delay.png)
 ## Setup 
 There need to be a file named .env in rootfolder to set up enviroment variables. 
 ### Database Connection
@@ -43,5 +45,6 @@ go to: `http://localhost:5000/`
 Database: PostgreSQL, SQLAlchemy.  
 Frontend: HTML/CSS, Javascript.  
 Backend: Python, Flask.
+ETL & Analysis: Pandas, Matplotlib
 ## Data
 Deutsche Bahn's Timetables-API, Interne Bahnhofsnummer(IBNR).
