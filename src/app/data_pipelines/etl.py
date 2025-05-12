@@ -67,13 +67,10 @@ def etl_planned_data(conn,evaNo, date, hour):
             pp = ar.attrib.get("pp", 'NULL') #  planned planned_platform
             ppth = ar.attrib.get("ppth", 'NULL') # planned path
             if pt is None:
-                print("Skipping element with missing 'pt'")
                 continue
             if pp is None:
-                print("Skipping element with missing 'pp")
                 continue
             if ppth is None:
-                print("Skipping element with missing 'ppth'")
                 continue    
             pt_timestamp = datetime.strptime(pt, "%y%m%d%H%M")
                         # Truncate Microseconds

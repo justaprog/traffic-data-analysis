@@ -88,5 +88,5 @@ def delayed_arrivals(engine, evanos: list[int],next_hours: int):
 
 if __name__ == "__main__":
     # Berlin hbf:8098160, München hbf:8000261, Frankfurt am Main hbf:8000105
-    delayed_arrivals(engine, [8098160,8000261,8000105],4)
+    delayed_arrivals(engine, [8098160,8000261,8000105],6)
 
